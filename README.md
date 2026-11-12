@@ -13,10 +13,10 @@ flutter run -d chrome
 
 ## Deploy to GitHub Pages
 
-GitHub Actions deploys the web app to
+Set the repository's **Settings > Pages > Build and deployment > Source** to
+**GitHub Actions** once. Then GitHub Actions deploys the web app to
 `https://yolisiledobe-prog.github.io/Campus-transit/` whenever
-`upload/campus-transit-project` is updated. The first deployment may take a few
-minutes to finish.
+`upload/campus-transit-project` is updated.
 
 ## Deploy to Firebase Hosting
 
