@@ -49,10 +49,6 @@ class WelcomeScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: AppPalette.navy),
               ),
-              const Text(
-                'Skip the Lines. Secure Your Ride',
-                style: TextStyle(fontSize: 16, color: AppPalette.mutedText),
-              ),
               const SizedBox(height: 48),
 
               const Text(
