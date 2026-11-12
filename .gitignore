@@ -34,6 +34,7 @@ migrate_working_dir/
 /coverage/
 /functions/lib/
 /functions/node_modules/
+.firebase/
 
 # Symbolication related
 app.*.symbols

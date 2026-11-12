@@ -11,6 +11,13 @@ flutter pub get
 flutter run -d chrome
 ```
 
+## Deploy to GitHub Pages
+
+GitHub Actions deploys the web app to
+`https://yolisiledobe-prog.github.io/Campus-transit/` whenever
+`upload/campus-transit-project` is updated. The first deployment may take a few
+minutes to finish.
+
 ## Deploy to Firebase Hosting
 
 The Firebase project `campustransit-26c45` is configured for Hosting. Sign in
