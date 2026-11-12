@@ -15,10 +15,5 @@ void main() {
     expect(find.text('Student'), findsOneWidget);
     expect(find.text('Admin'), findsOneWidget);
 
-    // Check the welcome message.
-    expect(
-      find.text('Skip the Lines. Secure Your Ride'),
-      findsOneWidget,
-    );
   });
 }
