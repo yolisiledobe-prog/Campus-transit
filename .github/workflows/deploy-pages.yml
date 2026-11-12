@@ -24,6 +24,8 @@ jobs:
         with:
           channel: stable
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - run: flutter pub get
       - run: flutter build web --release --base-href "/Campus-transit/"
       - uses: actions/upload-pages-artifact@v3
