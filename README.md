@@ -1,17 +1,23 @@
-# campus_transit
+# Campus Transit
 
-A new Flutter project.
+A student transport application for Walter Sisulu University.
 
-## Getting Started
+## Run in a browser
 
-This project is a starting point for a Flutter application.
+Install Flutter, then run these commands from the project directory:
 
-A few resources to get you started if this is your first Flutter project:
+```shell
+flutter pub get
+flutter run -d chrome
+```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Deploy to Firebase Hosting
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The Firebase project `campustransit-26c45` is configured for Hosting. Sign in
+with an account that has access to the project, then build and deploy:
+
+```shell
+firebase login
+flutter build web --release
+firebase deploy --only hosting --project campustransit-26c45
+```
