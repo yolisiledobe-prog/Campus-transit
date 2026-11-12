@@ -1,0 +1,109 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    match /users/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+
+      allow create: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.role == 'student'
+        && request.resource.data.email is string;
+
+      allow update: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'firstName',
+          'lastName',
+          'phone',
+          'email',
+          'residence'
+        ]);
+    }
+
+    match /transport_applications/{applicationId} {
+      allow read: if isAdmin()
+        || (isSignedIn() && resource.data.uid == request.auth.uid);
+
+      allow create: if isSignedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasAll([
+          'uid',
+          'studentNumber',
+          'fullName',
+          'email',
+          'residence',
+          'proofSubmitted',
+          'proofSubmissionMethod',
+          'proofSubmittedAt',
+          'status',
+          'appliedAt'
+        ])
+        && request.resource.data.status == 'Pending'
+        && request.resource.data.studentNumber is string
+        && request.resource.data.fullName is string
+        && request.resource.data.email is string
+        && request.resource.data.residence is string
+        && request.resource.data.proofSubmitted == true
+        && request.resource.data.proofSubmissionMethod == 'in_person_or_school_approved_channel'
+        && request.resource.data.proofSubmittedAt is timestamp
+        && request.resource.data.appliedAt is timestamp;
+
+      allow update: if (
+        isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'status',
+            'adminComment',
+            'adminCommentUpdatedAt'
+          ])
+          && request.resource.data.status in ['Pending', 'Approved', 'Rejected']
+          && (request.resource.data.status != 'Approved'
+            || resource.data.proofSubmitted == true
+            || (resource.data.fileName is string
+              && resource.data.fileName.size() > 0
+              && resource.data.proofOfResidenceUrl is string
+              && resource.data.proofOfResidenceUrl.size() > 0
+              && resource.data.proofStoragePath is string
+              && resource.data.proofStoragePath.size() > 0))
+      ) || (
+        isSignedIn()
+          && resource.data.uid == request.auth.uid
+          && request.resource.data.uid == resource.data.uid
+          && request.resource.data.status == 'Pending'
+          && request.resource.data.proofSubmitted == true
+          && request.resource.data.proofSubmissionMethod == 'in_person_or_school_approved_channel'
+          && request.resource.data.proofSubmittedAt is timestamp
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'studentNumber',
+            'fullName',
+            'email',
+            'residence',
+            'proofSubmitted',
+            'proofSubmissionMethod',
+            'proofSubmittedAt',
+            'status',
+            'appliedAt',
+            'adminComment',
+            'adminCommentUpdatedAt'
+          ])
+      );
+
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
